@@ -28,8 +28,10 @@ public class SeleniumGitCI
     }
 
     @Test
-    public void userLogin()
+    public void userLogin() throws Exception 
     {
+        throw new Exception("Exception message");
+        
         WebElement searchTxt = driver.findElement(By.name("q"));
         searchTxt.sendKeys("automation");
         WebElement submitBtn = driver.findElement(By.name("btnK"));
