@@ -28,15 +28,8 @@ public class SeleniumGitCI
     }
 
     @Test
-    public void userLogin()
-    {
-        WebElement searchTxt = driver.findElement(By.name("q"));
-        searchTxt.sendKeys("automation");
-        WebElement submitBtn = driver.findElement(By.name("btnK"));
-        submitBtn.click();
-        System.out.println("Current URL is:" + driver.getCurrentUrl());
-        Assert.assertTrue(driver.getTitle().contains("automation -iasasasa Google Search"));
-        System.out.println("Current Title is:" + driver.getTitle());
+    public void userLogin() throws Exception {
+        throw new Exception("Exception message");
     }
 
     @AfterClass
