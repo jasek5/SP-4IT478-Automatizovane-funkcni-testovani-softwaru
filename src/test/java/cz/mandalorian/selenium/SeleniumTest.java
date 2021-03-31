@@ -35,11 +35,11 @@ public class SeleniumTest
         // GIVEN
         driver.get("https://www.google.com/");
 
-        // AGREE
-        WebDriverWait wait = new WebDriverWait(driver , 10);
-        wait.until(driver -> driver.switchTo().frame(0));
-        WebElement agree = driver.findElement(By.id("introAgreeButton"));
-        agree.click();
+        //WebDriverWait wait = new WebDriverWait(driver , 10);
+        //wait.until(driver -> driver.switchTo().frame(0));
+        //WebElement agree = driver.findElement(By.id("introAgreeButton"));
+        //agree.click();  // AGREE
+
 
         // WHEN
         WebElement searchInput = driver.findElement(By.name("q"));
