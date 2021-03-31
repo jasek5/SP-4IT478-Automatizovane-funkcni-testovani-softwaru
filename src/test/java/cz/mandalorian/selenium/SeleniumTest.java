@@ -25,7 +25,6 @@ public class SeleniumTest
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--headless");
         driver = new ChromeDriver(options);
-        driver.navigate().to("https://www.google.com");
         driver.manage().window().maximize();
     }
 
