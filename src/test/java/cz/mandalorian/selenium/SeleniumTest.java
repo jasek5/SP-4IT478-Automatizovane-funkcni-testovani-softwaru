@@ -17,7 +17,7 @@ public class SeleniumTest
     public void setUp()
     {
         ChromeOptions cho = new ChromeOptions();
-        System.setProperty("webdriver.chrome.driver", "src/test/resources/drivers/chromedriver.exe");
+        //System.setProperty("webdriver.chrome.driver", "src/test/resources/drivers/chromedriver.exe");
         driver = new ChromeDriver(cho);
         driver.manage().window().maximize();
     }
