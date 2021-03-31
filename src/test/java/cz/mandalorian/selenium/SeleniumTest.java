@@ -1,5 +1,6 @@
 package cz.mandalorian.selenium;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -9,6 +10,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.concurrent.TimeUnit;
+
 public class SeleniumTest
 {
     private WebDriver driver;
@@ -16,9 +19,13 @@ public class SeleniumTest
     @Before
     public void setUp()
     {
-        ChromeOptions cho = new ChromeOptions();
-        System.setProperty("webdriver.chrome.driver", "src/test/resources/drivers/chromedriver");
-        driver = new ChromeDriver(cho);
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--headless");
+        driver = new ChromeDriver(options);
+        driver.navigate().to("https://www.google.com");
         driver.manage().window().maximize();
     }
 
