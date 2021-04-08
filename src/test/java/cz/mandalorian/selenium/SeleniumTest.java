@@ -38,7 +38,7 @@ public class SeleniumTest {
 
         // WHEN
         WebElement searchInput = driver.findElement(By.name("q"));
-        searchInput.sendKeys("koloběžka");
+        searchInput.sendKeys("koloběžka is not safe");
         searchInput.sendKeys(Keys.ENTER);
 
         // THEN
