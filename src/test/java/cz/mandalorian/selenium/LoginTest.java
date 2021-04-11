@@ -1,17 +1,24 @@
 package cz.mandalorian.selenium;
 
+import cz.mandalorian.testframework.DashboardPage;
+import cz.mandalorian.testframework.LoginPage;
+import cz.mandalorian.testframework.Page;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class SeleniumTest {
+public class LoginTest {
     private WebDriver driver;
+    private String username = "rukovoditel";
+    private  String password = "vse456ru";
 
     @Before
     public void setUp() {
@@ -25,28 +32,19 @@ public class SeleniumTest {
     }
 
     @Test
-    public void googleSearch()
+    public void loginPossitive()
     {
         // GIVEN
-        driver.get("https://www.google.com/");
-
-        //WebDriverWait wait = new WebDriverWait(driver , 10);
-        //wait.until(driver -> driver.switchTo().frame(0));
-        //WebElement agree = driver.findElement(By.id("introAgreeButton"));
-        //agree.click();  // AGREE
+        LoginPage page = new LoginPage(driver);
+        page.open();
+        page.checkPageOpen();
 
 
         // WHEN
-        WebElement searchInput = driver.findElement(By.name("q"));
-        searchInput.sendKeys("koloběžka");
-        searchInput.sendKeys(Keys.ENTER);
+        DashboardPage dashboardPage = page.login(username, password);
 
         // THEN
-        Assert.assertTrue(driver.getTitle().startsWith("koloběžka - "));
-        Assert.assertTrue(driver.getTitle().startsWith("koloběžka - "));
-
-        Assert.assertTrue(driver.getCurrentUrl().startsWith("https://www.google.com/search?"));
-        Assert.assertTrue(driver.getCurrentUrl().contains("q=kolob%C4%9B%C5%BEka"));
+        dashboardPage.checkPageOpen();
     }
 
     @After
@@ -56,3 +54,5 @@ public class SeleniumTest {
         }
     }
 }
+
+
