@@ -10,7 +10,6 @@ on:
       - development
   schedule:
   - cron: "0 */12 * * *"
-  
 
 jobs:
   build:
