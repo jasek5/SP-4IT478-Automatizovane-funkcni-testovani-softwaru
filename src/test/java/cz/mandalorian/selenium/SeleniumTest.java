@@ -40,6 +40,7 @@ public class SeleniumTest {
         WebElement searchInput = driver.findElement(By.name("q"));
         searchInput.sendKeys("koloběžka");
         searchInput.sendKeys(Keys.ENTER);
+        searchInput.sendKeys();
 
         // THEN
         Assert.assertTrue(driver.getTitle().startsWith("koloběžka - "));
