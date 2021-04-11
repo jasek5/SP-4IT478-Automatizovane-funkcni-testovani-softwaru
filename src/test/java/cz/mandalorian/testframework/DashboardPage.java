@@ -43,7 +43,12 @@ public class DashboardPage extends Page {
         Actions logOffAction = new Actions(driver);
         WebElement dropdown = driver.findElement(By.cssSelector(".dropdown.user"));
         logOffAction.moveToElement(dropdown).build().perform();
-        driver.findElement(By.cssSelector(".dropdown-menu li:nth-child(5)")).click();
+
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebElement logOffButton = driver.findElement(By.cssSelector(".dropdown-menu li:nth-child(5)"));
+        wait.until(ExpectedConditions.elementToBeClickable(logOffButton));
+
+        logOffButton.click();
     }
 }
 
