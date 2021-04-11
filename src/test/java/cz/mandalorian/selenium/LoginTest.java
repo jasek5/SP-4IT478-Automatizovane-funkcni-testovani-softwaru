@@ -19,6 +19,7 @@ public class LoginTest {
     private WebDriver driver;
     private String username = "rukovoditel";
     private  String password = "vse456ru";
+    private  String invalidPassword = "invalid_password";
 
     @Before
     public void setUp() {
@@ -26,13 +27,13 @@ public class LoginTest {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--headless");
+//        options.addArguments("--headless");
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
     }
 
     @Test
-    public void loginPossitive()
+    public void loginPositive()
     {
         // GIVEN
         LoginPage page = new LoginPage(driver);
@@ -46,6 +47,22 @@ public class LoginTest {
         // THEN
         dashboardPage.checkPageOpen();
     }
+    @Test
+
+    public void loginNegativeWithInvalidPassword() {
+        // GIVEN
+        LoginPage page = new LoginPage(driver);
+        page.open();
+        page.checkPageOpen();
+
+        // WHEN
+        DashboardPage dashboardPage = page.login(username, invalidPassword);
+
+        // THEN
+        page.checkLoginFailure();
+        dashboardPage.checkPageNotOpen();
+    }
+
 
     @After
     public void tearDown(){

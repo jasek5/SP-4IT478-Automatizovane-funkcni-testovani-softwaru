@@ -21,6 +21,11 @@ public class DashboardPage extends Page{
         Assert.assertNotNull(getSideBarMenu());
 
     }
+    public void checkPageNotOpen(){
+        Assert.assertNotEquals(BASE_URL + RELATIVE_URL,driver.getCurrentUrl());
+        Assert.assertNull(getSideBarMenu());
+
+    }
 
     public WebElement getSideBarMenu(){
         List<WebElement> sidebarList = driver.findElements(By.cssSelector(".page-sidebar-menu"));
