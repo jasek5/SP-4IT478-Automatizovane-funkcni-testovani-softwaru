@@ -3,7 +3,5 @@
 ## Directory-based project format:
 .idea/
 
-.sync-co*
 debug.log
-maven.yml
 /target
