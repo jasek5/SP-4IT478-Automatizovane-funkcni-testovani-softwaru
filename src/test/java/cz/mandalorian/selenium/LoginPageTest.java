@@ -18,8 +18,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class LoginPageTest {
     private WebDriver driver;
     private String username = "rukovoditel";
-    private  String password = "vse456ru";
-    private  String invalidPassword = "invalid_password";
+    private String password = "vse456ru";
+    private String invalidPassword = "invalid_password";
 
     @Before
     public void setUp() {
@@ -28,13 +28,16 @@ public class LoginPageTest {
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--headless");
+
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
     }
 
+    /**
+     * User logs into system using valid username and password.
+     */
     @Test
-    public void loginPositive()
-    {
+    public void loginPositive() {
         // GIVEN
         LoginPage page = new LoginPage(driver);
         page.open();
@@ -47,8 +50,11 @@ public class LoginPageTest {
         // THEN
         dashboardPage.checkPageOpen();
     }
-    @Test
 
+    /**
+     * User cannot log into system using valid username and invalid password.
+     */
+    @Test
     public void loginNegativeWithInvalidPassword() {
         // GIVEN
         LoginPage page = new LoginPage(driver);
@@ -65,10 +71,18 @@ public class LoginPageTest {
 
 
     @After
-    public void tearDown(){
+    public void tearDown() {
         if (driver != null) {
             driver.close();
         }
+    }
+
+    public WebDriver getDriver() {
+        return driver;
+    }
+
+    public void setDriver(WebDriver driver) {
+        this.driver = driver;
     }
 }
 

@@ -17,9 +17,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 public class DashboardPageTest {
     private WebDriver driver;
-    private String username = "rukovoditel";
-    private  String password = "vse456ru";
-    private  String invalidPassword = "invalid_password";
+//    private String username = "rukovoditel";
+//    private String password = "vse456ru";
+//    private String invalidPassword = "invalid_password";
 
     @Before
     public void setUp() {
@@ -27,45 +27,34 @@ public class DashboardPageTest {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--headless");
-        driver = new ChromeDriver(options);
-        driver.manage().window().maximize();
+        // options.addArguments("--headless");
+        this.driver = new ChromeDriver(options);
+        this.driver.manage().window().maximize();
     }
 
+    /**
+     * Logged user logs off.
+     */
     @Test
-    public void loginPositive()
-    {
+    public void logOff() throws InterruptedException {
         // GIVEN
-        LoginPage page = new LoginPage(driver);
-        page.open();
-        page.checkPageOpen();
-
+        LoginPageTest loginPageTest = new LoginPageTest();
+        loginPageTest.setDriver(driver);
+        loginPageTest.loginPositive();
+        DashboardPage dashboardPage = new DashboardPage(driver);
 
         // WHEN
-        DashboardPage dashboardPage = page.login(username, password);
+        dashboardPage.logOff();
 
         // THEN
-        dashboardPage.checkPageOpen();
-    }
-    @Test
-
-    public void loginNegativeWithInvalidPassword() {
-        // GIVEN
-        LoginPage page = new LoginPage(driver);
-        page.open();
-        page.checkPageOpen();
-
-        // WHEN
-        DashboardPage dashboardPage = page.login(username, invalidPassword);
-
-        // THEN
-        page.checkLoginFailure();
         dashboardPage.checkPageNotOpen();
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.checkPageOpen();
     }
 
 
     @After
-    public void tearDown(){
+    public void tearDown() {
         if (driver != null) {
             driver.close();
         }
