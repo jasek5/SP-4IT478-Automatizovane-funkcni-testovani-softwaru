@@ -26,6 +26,8 @@ public class DashboardPageTest {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--no-sandbox");
+        options.addArguments("--window-size=1920,1080");
+        options.addArguments("--start-maximized");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--headless");
         this.driver = new ChromeDriver(options);
@@ -36,7 +38,7 @@ public class DashboardPageTest {
      * Logged user logs off.
      */
     @Test
-    public void logOff() throws InterruptedException {
+    public void logOff() {
         // GIVEN
         LoginPageTest loginPageTest = new LoginPageTest();
         loginPageTest.setDriver(driver);
