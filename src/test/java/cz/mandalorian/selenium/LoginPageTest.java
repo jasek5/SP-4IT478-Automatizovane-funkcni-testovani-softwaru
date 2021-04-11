@@ -15,7 +15,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-public class LoginTest {
+public class LoginPageTest {
     private WebDriver driver;
     private String username = "rukovoditel";
     private  String password = "vse456ru";
