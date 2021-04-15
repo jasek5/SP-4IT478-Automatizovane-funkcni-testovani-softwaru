@@ -1,8 +1,7 @@
 package cz.mandalorian.selenium;
 
-import cz.mandalorian.testframework.DashboardPage;
-import cz.mandalorian.testframework.LoginPage;
-import cz.mandalorian.testframework.Page;
+
+import cz.mandalorian.testframework.*;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.After;
 import org.junit.Assert;
@@ -15,7 +14,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-public class DashboardPageTest {
+public class ProjectsPageTest {
     private WebDriver driver;
 //    private String username = "rukovoditel";
 //    private String password = "vse456ru";
@@ -38,20 +37,20 @@ public class DashboardPageTest {
      * Logged user logs off.
      */
     @Test
-    public void logOff() {
+    public void negativeAddProjectWithoutName() {
         // GIVEN
         LoginPageTest loginPageTest = new LoginPageTest();
         loginPageTest.setDriver(driver);
         loginPageTest.loginPositive();
-        DashboardPage dashboardPage = new DashboardPage(driver);
+        ProjectsPage projectsPage = new ProjectsPage(driver);
+        projectsPage.open();
+        projectsPage.checkPageOpen();
 
         // WHEN
-        dashboardPage.logOff();
-
+        projectsPage.addProject("", PriorityType.Urgent, StatusType.New);
         // THEN
-        dashboardPage.checkPageNotOpen();
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.checkPageOpen();
+        projectsPage.checkNameAlert();
+        projectsPage.checkProjectCreationFormOpen();
     }
 
 
@@ -62,4 +61,3 @@ public class DashboardPageTest {
         }
     }
 }
-
