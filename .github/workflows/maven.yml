@@ -1,15 +1,11 @@
-name: Java CI with Maven
+name: Java CI with Maven - Dev branch
 on:
   push:
     branches:
-      - master
       - development
   pull_request:
     branches:
-      - master
       - development
-  schedule:
-  - cron: "0 */12 * * *"
 
 jobs:
   build:
