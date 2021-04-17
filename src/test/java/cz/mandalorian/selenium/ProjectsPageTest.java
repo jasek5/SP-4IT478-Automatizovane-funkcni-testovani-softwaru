@@ -14,6 +14,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import java.io.IOException;
+
 public class ProjectsPageTest {
     private WebDriver driver;
 //    private String username = "rukovoditel";
@@ -21,14 +23,16 @@ public class ProjectsPageTest {
 //    private String invalidPassword = "invalid_password";
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--no-sandbox");
         options.addArguments("--window-size=1920,1080");
         options.addArguments("--start-maximized");
         options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--headless");
+        if (Utils.isHeadlessMode()) {
+            options.addArguments("--headless");
+        }
         this.driver = new ChromeDriver(options);
         this.driver.manage().window().maximize();
     }
