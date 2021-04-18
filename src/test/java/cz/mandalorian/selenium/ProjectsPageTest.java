@@ -21,7 +21,6 @@ public class ProjectsPageTest {
 //    private String username = "rukovoditel";
 //    private String password = "vse456ru";
 //    private String invalidPassword = "invalid_password";
-
     @Before
     public void setUp() throws IOException {
         WebDriverManager.chromedriver().setup();
@@ -56,7 +55,33 @@ public class ProjectsPageTest {
         projectsPage.checkNameAlert();
         projectsPage.checkProjectCreationFormOpen();
     }
+    @Test
+    public void positiveAddProjectWithTodayDate() {
+        //GIVEN
+        LoginPageTest loginPageTest = new LoginPageTest();
+        loginPageTest.setDriver(driver);
+        loginPageTest.loginPositive();
+        ProjectsPage projectsPage = new ProjectsPage(driver);
+        projectsPage.open();
+        projectsPage.checkPageOpen();
+        // WHEN
+        String uniqueName = projectsPage.generateUniqueName();
+        String todayDate = projectsPage.getTodayDate();
+        PriorityType priority = PriorityType.High;
+        StatusType status = StatusType.New;
 
+        TasksPage tasksPage = projectsPage.addProject(uniqueName, priority, status, todayDate);
+
+
+        // THEN
+        tasksPage.checkPageOpen(uniqueName);
+        projectsPage.open();
+        projectsPage.checkPageOpen();
+        projectsPage.checkProjectAdded(uniqueName, priority, status, todayDate);
+        projectsPage.projectDelete(uniqueName);
+        projectsPage.checkProjectDeleted(uniqueName);
+
+    }
 
     @After
     public void tearDown() {
