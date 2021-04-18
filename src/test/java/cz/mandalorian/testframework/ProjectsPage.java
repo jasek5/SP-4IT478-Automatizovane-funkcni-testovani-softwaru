@@ -8,7 +8,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class ProjectsPage extends Page {
 
@@ -19,7 +20,8 @@ public class ProjectsPage extends Page {
 
 
     }
-    public void addProject(String name,PriorityType priorityType, StatusType statusType)  {
+
+    public void addProject(String name, PriorityType priorityType, StatusType statusType) {
         clickAddProjectButton();
         selectPriority(priorityType);
         selectStatus(statusType);
@@ -27,9 +29,23 @@ public class ProjectsPage extends Page {
         clickSaveProjectButton();
 
 
-
-
     }
+    public TasksPage addProject(String name, PriorityType priorityType, StatusType statusType, String date) {
+        clickAddProjectButton();
+        selectPriority(priorityType);
+        selectStatus(statusType);
+        fillName(name);
+        fillDate(date);
+        clickSaveProjectButton();
+
+        return new TasksPage(driver);
+    }
+
+    private void fillDate(String date) {
+        WebElement dateInput = driver.findElement(By.cssSelector("#fields_159"));
+        dateInput.sendKeys(date);
+    }
+
 
     @Override
     public String open() {
@@ -37,42 +53,45 @@ public class ProjectsPage extends Page {
         return driver.getCurrentUrl();
     }
 
-    private void fillName(String name){
+    private void fillName(String name) {
         WebElement nameInput = driver.findElement(By.cssSelector("#fields_158"));
         nameInput.sendKeys(name);
     }
-    private void selectPriority(PriorityType priorityType){
+
+    private void selectPriority(PriorityType priorityType) {
         Select comboBox = new Select(driver.findElement(By.cssSelector("#fields_156")));
         comboBox.selectByVisibleText(priorityType.name());
     }
 
-    private void selectStatus(StatusType statusType){
+    private void selectStatus(StatusType statusType) {
         Select comboBox = new Select(driver.findElement(By.cssSelector("#fields_157")));
         comboBox.selectByVisibleText(statusType.name());
     }
+
     public void checkPageOpen() {
         Assert.assertEquals(BASE_URL + RELATIVE_URL, driver.getCurrentUrl());
         Assert.assertEquals("Projects", getPageTitle().getText());
 
     }
 
-    private void clickAddProjectButton(){
+    private void clickAddProjectButton() {
         WebElement addProjectBtn = driver.findElement(By.xpath("//button[text()='Add Project']"));
         addProjectBtn.click();
         checkProjectCreationFormOpen();
 
     }
 
-    private void clickSaveProjectButton(){
+    private void clickSaveProjectButton() {
         WebElement saveProjectBtn = driver.findElement(By.xpath("//button[text()='Save']"));
         saveProjectBtn.click();
 
     }
-    public void checkNameAlert(){
+
+    public void checkNameAlert() {
         Assert.assertNotNull(getNameAlert());
     }
 
-    private WebElement getNameAlert(){
+    private WebElement getNameAlert() {
         List<WebElement> alertList = driver.findElements(By.cssSelector("#fields_158-error"));
 
         if (alertList.size() >= 1) {
@@ -83,20 +102,105 @@ public class ProjectsPage extends Page {
     }
 
 
-    public void checkProjectCreationFormOpen()  {
+    public void checkProjectCreationFormOpen() {
         WebDriverWait wait = new WebDriverWait(driver, 5);
-//        List<WebElement> menuForm = driver.findElements(By.cssSelector("#items_form"));
-//        wait.until(ExpectedConditions.invisibilityOfAllElements(menuForm));
-
-//        Assert.assertFalse(menuForm.isEmpty());
-//        Thread.sleep(5000);
-//        WebElement saveBtn = driver.findElement(By.xpath("//button[text()='Save']"));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Save']")));
     }
 
     private WebElement getPageTitle() {
 
         return driver.findElement(By.cssSelector(".page-title"));
+    }
+
+    public String getTodayDate() {
+        Date today = Calendar.getInstance().getTime();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return formatter.format(today);
+    }
+    public String generateUniqueName(){
+        return "project_mandalorian_" + UUID.randomUUID().toString();
+    }
+
+    public void checkProjectAdded(String projectName, PriorityType priorityType, StatusType statusType, String date){
+        List<WebElement> projectTable = getProjectTableRows();
+        WebElement projectRow = findProjectRowInProjectTable(projectName, projectTable);
+
+        Assert.assertNotNull(projectRow);
+        checkProjectRowContent(projectRow,priorityType,statusType,date);
+
+
+    }
+    private List<WebElement> getProjectTableRows() {
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("table tbody tr")));
+        List<WebElement> projectTable =  driver.findElements(By.cssSelector("table tbody tr"));
+
+
+        return projectTable;
+    }
+
+    private WebElement findProjectRowInProjectTable(String projectName, List<WebElement> projectTable){
+        for (WebElement projectRow: projectTable
+             ) {
+            if (projectRow.getText().contains(projectName)){
+                return projectRow;
+            }
+        }
+        return null;
+    }
+
+    private void checkProjectRowContent(WebElement projectRow, PriorityType priorityType, StatusType statusType, String date){
+        List<WebElement> columnsList = projectRow.findElements(By.cssSelector("td"));
+        String priorityContents = columnsList.get(3).getText();
+        String statusContents = columnsList.get(5).getText();
+        String dateContents = columnsList.get(6).getText();
+
+        Assert.assertEquals(priorityContents,priorityType.toString());
+        Assert.assertEquals(statusContents,statusType.toString());
+        Assert.assertEquals(dateContents,dateFormatTransform(date));
+
+
+    }
+
+    private String dateFormatTransform(String date){
+        String newDivider = "/";
+        String[] dateParts = date.split("-");
+        List<String> datePartList = Arrays.asList(dateParts);
+        String year = datePartList.get(0);
+        String month = datePartList.get(1);
+        String day = datePartList.get(2);
+        return month + newDivider + day + newDivider + year;
+    }
+
+    public void projectDelete(String projectName){
+        List<WebElement> projectTable = getProjectTableRows();
+        WebElement projectRow = findProjectRowInProjectTable(projectName, projectTable);
+        List<WebElement> columnsList = projectRow.findElements(By.cssSelector("td"));
+
+        WebElement actionColumn = columnsList.get(1);
+        WebElement trashBtn = actionColumn.findElement(By.cssSelector(".fa-trash-o"));
+        trashBtn.click();
+
+        checkProjectDeletionFormOpen();
+        confirmProjectDeletion();
+
+    }
+    private void checkProjectDeletionFormOpen() {
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Delete']")));
+    }
+    private void confirmProjectDeletion(){
+        driver.findElement(By.xpath("//button[text()='Delete']")).click();
+
+    }
+
+    public void checkProjectDeleted(String projectName){
+        List<WebElement> projectTable = getProjectTableRows();
+        WebElement projectRow = findProjectRowInProjectTable(projectName, projectTable);
+
+        Assert.assertNull(projectRow);
+
+
     }
 
 }
