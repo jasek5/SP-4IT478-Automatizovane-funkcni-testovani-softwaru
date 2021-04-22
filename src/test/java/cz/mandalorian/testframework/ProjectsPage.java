@@ -190,6 +190,10 @@ public class ProjectsPage extends Page {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Delete']")));
     }
     private void confirmProjectDeletion(){
+        List<WebElement> checkboxList = driver.findElements(By.cssSelector("#uniform-delete_confirm"));
+        if (!checkboxList.isEmpty()) {
+            checkboxList.get(0).click();
+        }
         driver.findElement(By.xpath("//button[text()='Delete']")).click();
 
     }
