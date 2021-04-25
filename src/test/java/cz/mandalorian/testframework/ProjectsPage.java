@@ -21,19 +21,19 @@ public class ProjectsPage extends Page {
 
     }
 
-    public void addProject(String name, PriorityType priorityType, StatusType statusType) {
+    public void addProject(String name, ProjectPriorityType projectPriorityType, ProjectStatusType projectStatusType) {
         clickAddProjectButton();
-        selectPriority(priorityType);
-        selectStatus(statusType);
+        selectPriority(projectPriorityType);
+        selectStatus(projectStatusType);
         fillName(name);
         clickSaveProjectButton();
 
 
     }
-    public TasksPage addProject(String name, PriorityType priorityType, StatusType statusType, String date) {
+    public TasksPage addProject(String name, ProjectPriorityType projectPriorityType, ProjectStatusType projectStatusType, String date) {
         clickAddProjectButton();
-        selectPriority(priorityType);
-        selectStatus(statusType);
+        selectPriority(projectPriorityType);
+        selectStatus(projectStatusType);
         fillName(name);
         fillDate(date);
         clickSaveProjectButton();
@@ -58,14 +58,14 @@ public class ProjectsPage extends Page {
         nameInput.sendKeys(name);
     }
 
-    private void selectPriority(PriorityType priorityType) {
+    private void selectPriority(ProjectPriorityType projectPriorityType) {
         Select comboBox = new Select(driver.findElement(By.cssSelector("#fields_156")));
-        comboBox.selectByVisibleText(priorityType.name());
+        comboBox.selectByVisibleText(projectPriorityType.name());
     }
 
-    private void selectStatus(StatusType statusType) {
+    private void selectStatus(ProjectStatusType projectStatusType) {
         Select comboBox = new Select(driver.findElement(By.cssSelector("#fields_157")));
-        comboBox.selectByVisibleText(statusType.name());
+        comboBox.selectByVisibleText(projectStatusType.name());
     }
 
     public void checkPageOpen() {
@@ -117,16 +117,14 @@ public class ProjectsPage extends Page {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         return formatter.format(today);
     }
-    public String generateUniqueName(){
-        return "project_mandalorian_" + UUID.randomUUID().toString();
-    }
 
-    public void checkProjectAdded(String projectName, PriorityType priorityType, StatusType statusType, String date){
+
+    public void checkProjectAdded(String projectName, ProjectPriorityType projectPriorityType, ProjectStatusType projectStatusType, String date){
         List<WebElement> projectTable = getProjectTableRows();
         WebElement projectRow = findProjectRowInProjectTable(projectName, projectTable);
 
         Assert.assertNotNull(projectRow);
-        checkProjectRowContent(projectRow,priorityType,statusType,date);
+        checkProjectRowContent(projectRow, projectPriorityType, projectStatusType,date);
 
 
     }
@@ -149,14 +147,14 @@ public class ProjectsPage extends Page {
         return null;
     }
 
-    private void checkProjectRowContent(WebElement projectRow, PriorityType priorityType, StatusType statusType, String date){
+    private void checkProjectRowContent(WebElement projectRow, ProjectPriorityType projectPriorityType, ProjectStatusType projectStatusType, String date){
         List<WebElement> columnsList = projectRow.findElements(By.cssSelector("td"));
         String priorityContents = columnsList.get(3).getText();
         String statusContents = columnsList.get(5).getText();
         String dateContents = columnsList.get(6).getText();
 
-        Assert.assertEquals(priorityContents,priorityType.toString());
-        Assert.assertEquals(statusContents,statusType.toString());
+        Assert.assertEquals(priorityContents, projectPriorityType.toString());
+        Assert.assertEquals(statusContents, projectStatusType.toString());
         Assert.assertEquals(dateContents,dateFormatTransform(date));
 
 

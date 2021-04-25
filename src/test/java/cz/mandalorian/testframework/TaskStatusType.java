@@ -1,9 +1,11 @@
 package cz.mandalorian.testframework;
 
-public enum StatusType {
+public enum TaskStatusType {
     New,
     Open,
     Waiting,
+    Done,
     Closed,
+    Paid,
     Canceled
 }
