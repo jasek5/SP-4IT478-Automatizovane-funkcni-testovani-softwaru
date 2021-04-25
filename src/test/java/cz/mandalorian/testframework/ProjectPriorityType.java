@@ -1,6 +1,6 @@
 package cz.mandalorian.testframework;
 
-public enum PriorityType {
+public enum ProjectPriorityType {
     Urgent,
     High
 }

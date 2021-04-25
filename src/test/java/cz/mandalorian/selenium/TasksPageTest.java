@@ -12,9 +12,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.IOException;
 
-public class ProjectsPageTest {
+public class TasksPageTest {
     private WebDriver driver;
-//    private String username = "rukovoditel";
+    //    private String username = "rukovoditel";
 //    private String password = "vse456ru";
 //    private String invalidPassword = "invalid_password";
     @Before
@@ -32,48 +32,38 @@ public class ProjectsPageTest {
         this.driver.manage().window().maximize();
     }
 
-    /**
-     * Logged user logs off.
-     */
     @Test
-    public void negativeAddProjectWithoutName() {
-        // GIVEN
-        LoginPageTest loginPageTest = new LoginPageTest();
-        loginPageTest.setDriver(driver);
-        loginPageTest.loginPositive();
-        ProjectsPage projectsPage = new ProjectsPage(driver);
-        projectsPage.open();
-        projectsPage.checkPageOpen();
-
-        // WHEN
-        projectsPage.addProject("", ProjectPriorityType.Urgent, ProjectStatusType.New);
-        // THEN
-        projectsPage.checkNameAlert();
-        projectsPage.checkProjectCreationFormOpen();
-    }
-    @Test
-    public void positiveAddProjectWithTodayDate() {
+    public void positiveAddTaskWithRemoval() {
         //GIVEN
         LoginPageTest loginPageTest = new LoginPageTest();
         loginPageTest.setDriver(driver);
         loginPageTest.loginPositive();
+
         ProjectsPage projectsPage = new ProjectsPage(driver);
         projectsPage.open();
         projectsPage.checkPageOpen();
-        // WHEN
+
         String uniqueName = Utils.generateUniqueName(PrefixType.Project_Mandalorian_);
         String todayDate = projectsPage.getTodayDate();
         ProjectPriorityType priority = ProjectPriorityType.High;
         ProjectStatusType status = ProjectStatusType.New;
-
         TasksPage tasksPage = projectsPage.addProject(uniqueName, priority, status, todayDate);
-
-
-        // THEN
         tasksPage.checkPageOpen(uniqueName);
+
+        // WHEN
+        TaskTypeType taskType = TaskTypeType.Task;
+        String name = Utils.generateUniqueName(PrefixType.Task_Mandalorian_);
+        TaskStatusType statusType = TaskStatusType.New;
+        TaskPriorityType priorityType = TaskPriorityType.Medium;
+        String description = "Mandalorian project task";
+        tasksPage.createTask(taskType, name, statusType, priorityType, description);
+        // THEN
+
+        tasksPage.checkTaskContent(taskType, name, statusType, priorityType, description);
+        tasksPage.taskDelete(name);
+        tasksPage.checkTaskDeleted(name);
         projectsPage.open();
         projectsPage.checkPageOpen();
-        projectsPage.checkProjectAdded(uniqueName, priority, status, todayDate);
         projectsPage.projectDelete(uniqueName);
         projectsPage.checkProjectDeleted(uniqueName);
 
@@ -86,3 +76,4 @@ public class ProjectsPageTest {
         }
     }
 }
+
