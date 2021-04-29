@@ -126,7 +126,7 @@ public class TasksPage extends Page {
 
     private List<WebElement> getTaskInfoTableRows() {
 
-        return driver.findElements(By.cssSelector("table tbody tr"));
+        return driver.findElements(By.cssSelector(".item-details table tbody tr"));
     }
 
     private String getStatusText(List<WebElement> taskInfoTableRows) {
