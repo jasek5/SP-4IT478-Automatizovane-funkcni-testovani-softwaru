@@ -4,11 +4,14 @@ import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TasksPage extends Page {
 
@@ -126,7 +129,7 @@ public class TasksPage extends Page {
 
     private List<WebElement> getTaskInfoTableRows() {
 
-        return driver.findElements(By.cssSelector("table tbody tr"));
+        return driver.findElements(By.cssSelector(".item-details table tbody tr"));
     }
 
     private String getStatusText(List<WebElement> taskInfoTableRows) {
@@ -169,7 +172,7 @@ public class TasksPage extends Page {
         driver.findElement(By.linkText("Tasks")).click();
     }
 
-    private List<WebElement> getTaskTableRows() {
+    public List<WebElement> getTaskTableRows() {
         WebDriverWait wait = new WebDriverWait(driver, 5);
         wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("table tbody tr")));
 
@@ -221,6 +224,109 @@ public class TasksPage extends Page {
             }
         }
         return null;
+    }
+
+    public void checkDefaultFilter(){
+        WebElement filter =  driver.findElement(By.cssSelector(".filters-preview-condition-include"));
+        String[] filterConditions = filter.getText().split(", ");
+
+        Assert.assertEquals(3,filterConditions.length);
+
+        for (int i = 0; i < filterConditions.length; i++) {
+           String condition = filterConditions[i];
+
+            if (i == 0) {
+                Assert.assertEquals(TaskStatusType.New.name(), condition);
+            }
+            if (i == 1) {
+                Assert.assertEquals(TaskStatusType.Open.name(), condition);
+            }
+            if (i == 2) {
+                Assert.assertEquals(TaskStatusType.Waiting.name(), condition);
+            }
+
+        }
+        checkTasksCount(getTaskTableRows(),3);
+
+
+    }
+
+    public void deleteFilterStatusCondition(TaskStatusType... taskStatusTypes){
+        WebElement filter =  driver.findElement(By.cssSelector(".filters-preview-condition-include"));
+        filter.click();
+
+        checkTaskFilterFormOpen();
+
+        List<WebElement> filterConditions = driver.findElements(By.cssSelector(".search-choice"));
+        for (TaskStatusType taskStatusType: taskStatusTypes
+             ) {
+            for (WebElement filterCondition: filterConditions
+                 ) {
+                String conditionName = filterCondition.findElement(By.tagName("span")).getText();
+                if(conditionName.equals(taskStatusType.name())){
+                    getFilterConditionDeleteBtn(filterCondition).click();
+                }
+            }
+        }
+
+        clickSaveFilterBtn();
+    }
+
+    public void checkTasksCount(List<WebElement> taskTable, int requiredTaskCount){
+
+        Assert.assertEquals(requiredTaskCount, taskTable.size());
+    }
+
+    private WebElement getFilterConditionDeleteBtn(WebElement filterCondition){
+
+        return filterCondition.findElement(By.cssSelector(".search-choice-close"));
+
+    }
+
+    private void checkTaskFilterFormOpen() {
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Save']")));
+    }
+
+    private WebElement getSaveFilterBtn() {
+
+        return driver.findElement(By.xpath("//button[text()='Save']"));
+    }
+
+    private void clickSaveFilterBtn() {
+        getSaveFilterBtn().click();
+    }
+
+    public void deleteAllFilters() {
+        driver.findElement(By.cssSelector("a[title='Remove All Filters']")).click();
+    }
+
+    public void checkTasksStatuses(List<WebElement> taskTable, List<TaskStatusType> statusesToContain) {
+        for (WebElement taskRow : taskTable) {
+            List<WebElement> columnsList = taskRow.findElements(By.cssSelector("td"));
+            String status = columnsList.get(6).getText();
+            Assert.assertTrue(statusesToContain.stream().anyMatch(statusType -> statusType.name().equals(status)));
+        }
+    }
+
+    public void deleteAllTasks () {
+        WebElement selectAllCheckbox = driver.findElement(By.cssSelector("#uniform-select_all_items"));
+
+        selectAllCheckbox.click();
+
+        Actions deleteAction = new Actions(driver);
+        WebElement withSelectedDropdown = driver.findElement(By.cssSelector(".entitly-listing-buttons-left  .dropdown-toggle"));
+        deleteAction.moveToElement(withSelectedDropdown).build().perform();
+
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+//        WebElement deleteButton = driver.findElement(By.cssSelector(".dropdown-menu li:nth-child(1)"));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".entitly-listing-buttons-left .dropdown-menu li:nth-child(2)")));
+
+        WebElement deleteButton = driver.findElement(By.cssSelector(".entitly-listing-buttons-left .dropdown-menu li:nth-child(2)"));
+        deleteButton.click();
+
+        checkTaskDeletionFormOpen();
+        confirmTaskDeletion();
     }
 
 }
