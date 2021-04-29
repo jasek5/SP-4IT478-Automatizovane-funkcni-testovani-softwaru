@@ -7,10 +7,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class TasksPageTest {
     private WebDriver driver;
@@ -97,13 +100,31 @@ public class TasksPageTest {
         tasksPage.createTask(TaskTypeType.Change, Utils.generateUniqueName(PrefixType.Task_Mandalorian_), TaskStatusType.Paid, TaskPriorityType.Urgent, "lobster6");
         tasksPage.createTask(TaskTypeType.Task, Utils.generateUniqueName(PrefixType.Task_Mandalorian_), TaskStatusType.Canceled, TaskPriorityType.Urgent, "lobster7");
 
+
         tasksPage.checkDefaultFilter();
         tasksPage.deleteFilterStatusCondition(TaskStatusType.Open);
-        tasksPage.checkTasksCount(tasksPage.getTaskTableRows(),2);
 
+        List<WebElement> taskTableRows = tasksPage.getTaskTableRows();
+        tasksPage.checkTasksCount(taskTableRows,2);
+        tasksPage.checkTasksStatuses(taskTableRows, Arrays.asList(TaskStatusType.New, TaskStatusType.Waiting));
 
-        // THEN
+        tasksPage.deleteAllFilters();
 
+        taskTableRows = tasksPage.getTaskTableRows();
+        tasksPage.checkTasksStatuses(taskTableRows, Arrays.asList(TaskStatusType.New, TaskStatusType.Waiting,TaskStatusType.Paid, TaskStatusType.Canceled, TaskStatusType.Open,TaskStatusType.Closed,TaskStatusType.Done));
+        tasksPage.checkTasksCount(taskTableRows,7);
+
+        tasksPage.deleteAllTasks();
+        taskTableRows = tasksPage.getTaskTableRows();
+
+        //No record found
+        tasksPage.checkTasksCount(taskTableRows,1);
+
+        //THEN
+        projectsPage.open();
+        projectsPage.checkPageOpen();
+        projectsPage.projectDelete(uniqueName);
+        projectsPage.checkProjectDeleted(uniqueName);
 
     }
 

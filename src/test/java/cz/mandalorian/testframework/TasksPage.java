@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -296,6 +297,37 @@ public class TasksPage extends Page {
         getSaveFilterBtn().click();
     }
 
+    public void deleteAllFilters() {
+        driver.findElement(By.cssSelector("a[title='Remove All Filters']")).click();
+    }
+
+    public void checkTasksStatuses(List<WebElement> taskTable, List<TaskStatusType> statusesToContain) {
+        for (WebElement taskRow : taskTable) {
+            List<WebElement> columnsList = taskRow.findElements(By.cssSelector("td"));
+            String status = columnsList.get(6).getText();
+            Assert.assertTrue(statusesToContain.stream().anyMatch(statusType -> statusType.name().equals(status)));
+        }
+    }
+
+    public void deleteAllTasks () {
+        WebElement selectAllCheckbox = driver.findElement(By.cssSelector("#uniform-select_all_items"));
+
+        selectAllCheckbox.click();
+
+        Actions deleteAction = new Actions(driver);
+        WebElement withSelectedDropdown = driver.findElement(By.cssSelector(".entitly-listing-buttons-left  .dropdown-toggle"));
+        deleteAction.moveToElement(withSelectedDropdown).build().perform();
+
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+//        WebElement deleteButton = driver.findElement(By.cssSelector(".dropdown-menu li:nth-child(1)"));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".entitly-listing-buttons-left .dropdown-menu li:nth-child(2)")));
+
+        WebElement deleteButton = driver.findElement(By.cssSelector(".entitly-listing-buttons-left .dropdown-menu li:nth-child(2)"));
+        deleteButton.click();
+
+        checkTaskDeletionFormOpen();
+        confirmTaskDeletion();
+    }
 
 }
 
