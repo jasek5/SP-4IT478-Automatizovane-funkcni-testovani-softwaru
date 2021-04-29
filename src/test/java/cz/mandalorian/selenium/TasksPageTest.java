@@ -56,6 +56,7 @@ public class TasksPageTest {
         TaskStatusType statusType = TaskStatusType.New;
         TaskPriorityType priorityType = TaskPriorityType.Medium;
         String description = "Mandalorian project task";
+
         tasksPage.createTask(taskType, name, statusType, priorityType, description);
         // THEN
 
@@ -69,10 +70,47 @@ public class TasksPageTest {
 
     }
 
+    @Test
+    public void positiveFilterTasksWithRemoval() {
+        //GIVEN
+        LoginPageTest loginPageTest = new LoginPageTest();
+        loginPageTest.setDriver(driver);
+        loginPageTest.loginPositive();
+
+        ProjectsPage projectsPage = new ProjectsPage(driver);
+        projectsPage.open();
+        projectsPage.checkPageOpen();
+
+        String uniqueName = Utils.generateUniqueName(PrefixType.Project_Mandalorian_);
+        String todayDate = projectsPage.getTodayDate();
+        ProjectPriorityType priority = ProjectPriorityType.High;
+        ProjectStatusType status = ProjectStatusType.New;
+        TasksPage tasksPage = projectsPage.addProject(uniqueName, priority, status, todayDate);
+        tasksPage.checkPageOpen(uniqueName);
+
+        // WHEN
+        tasksPage.createTask(TaskTypeType.Task, Utils.generateUniqueName(PrefixType.Task_Mandalorian_), TaskStatusType.New, TaskPriorityType.Medium, "lobster1");
+        tasksPage.createTask(TaskTypeType.Bug, Utils.generateUniqueName(PrefixType.Task_Mandalorian_), TaskStatusType.Open, TaskPriorityType.High, "lobster2");
+        tasksPage.createTask(TaskTypeType.Change, Utils.generateUniqueName(PrefixType.Task_Mandalorian_), TaskStatusType.Waiting, TaskPriorityType.Urgent, "lobster3");
+        tasksPage.createTask(TaskTypeType.Bug, Utils.generateUniqueName(PrefixType.Task_Mandalorian_), TaskStatusType.Done, TaskPriorityType.Medium, "lobster4");
+        tasksPage.createTask(TaskTypeType.Idea, Utils.generateUniqueName(PrefixType.Task_Mandalorian_), TaskStatusType.Closed, TaskPriorityType.High, "lobster5");
+        tasksPage.createTask(TaskTypeType.Change, Utils.generateUniqueName(PrefixType.Task_Mandalorian_), TaskStatusType.Paid, TaskPriorityType.Urgent, "lobster6");
+        tasksPage.createTask(TaskTypeType.Task, Utils.generateUniqueName(PrefixType.Task_Mandalorian_), TaskStatusType.Canceled, TaskPriorityType.Urgent, "lobster7");
+
+        tasksPage.checkDefaultFilter();
+        tasksPage.deleteFilterStatusCondition(TaskStatusType.Open);
+        tasksPage.checkTasksCount(tasksPage.getTaskTableRows(),2);
+
+
+        // THEN
+
+
+    }
+
     @After
     public void tearDown() {
         if (driver != null) {
-            driver.close();
+//            driver.close();
         }
     }
 }
