@@ -12,7 +12,7 @@ public abstract class Page {
         this.driver = driver;
     }
 
-    public String open(){
+    public String open() {
         driver.get(BASE_URL);
 
         return driver.getCurrentUrl();

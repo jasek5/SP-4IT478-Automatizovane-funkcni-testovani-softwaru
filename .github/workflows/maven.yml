@@ -16,10 +16,10 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '11'
-      - name:  Install Google Chrome # Using shell script to install Google Chrome
-        run:   |
-                chmod +x ./InstallChrome.sh
-                            ./InstallChrome.sh 
+      - name: Install Google Chrome # Using shell script to install Google Chrome
+        run: |
+          chmod +x ./InstallChrome.sh
+                      ./InstallChrome.sh
       - name: Build
         run: mvn -B clean package -DskipTests
       - name: Run tests

@@ -17,6 +17,7 @@ import java.util.List;
 
 public class TasksPageTest {
     private WebDriver driver;
+
     //    private String username = "rukovoditel";
 //    private String password = "vse456ru";
 //    private String invalidPassword = "invalid_password";
@@ -105,20 +106,20 @@ public class TasksPageTest {
         tasksPage.deleteFilterStatusCondition(TaskStatusType.Open);
 
         List<WebElement> taskTableRows = tasksPage.getTaskTableRows();
-        tasksPage.checkTasksCount(taskTableRows,2);
+        tasksPage.checkTasksCount(taskTableRows, 2);
         tasksPage.checkTasksStatuses(taskTableRows, Arrays.asList(TaskStatusType.New, TaskStatusType.Waiting));
 
         tasksPage.deleteAllFilters();
 
         taskTableRows = tasksPage.getTaskTableRows();
-        tasksPage.checkTasksStatuses(taskTableRows, Arrays.asList(TaskStatusType.New, TaskStatusType.Waiting,TaskStatusType.Paid, TaskStatusType.Canceled, TaskStatusType.Open,TaskStatusType.Closed,TaskStatusType.Done));
-        tasksPage.checkTasksCount(taskTableRows,7);
+        tasksPage.checkTasksStatuses(taskTableRows, Arrays.asList(TaskStatusType.New, TaskStatusType.Waiting, TaskStatusType.Paid, TaskStatusType.Canceled, TaskStatusType.Open, TaskStatusType.Closed, TaskStatusType.Done));
+        tasksPage.checkTasksCount(taskTableRows, 7);
 
         tasksPage.deleteAllTasks();
         taskTableRows = tasksPage.getTaskTableRows();
 
         //No record found
-        tasksPage.checkTasksCount(taskTableRows,1);
+        tasksPage.checkTasksCount(taskTableRows, 1);
 
         //THEN
         projectsPage.open();

@@ -10,7 +10,7 @@ public class Utils {
         return "headless".equals(propertiesReader.getProperty("mode"));
     }
 
-    public static String generateUniqueName(PrefixType prefix){
+    public static String generateUniqueName(PrefixType prefix) {
         return prefix.name() + UUID.randomUUID().toString();
     }
 }

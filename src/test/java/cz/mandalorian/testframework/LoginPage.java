@@ -50,7 +50,7 @@ public class LoginPage extends Page {
         return null;
     }
 
-    public WebElement getInvalidAlert(){
+    public WebElement getInvalidAlert() {
         List<WebElement> alertList = driver.findElements(By.cssSelector(".alert.alert-danger"));
         if (alertList.size() >= 1) {
             return alertList.get(0);
@@ -59,7 +59,7 @@ public class LoginPage extends Page {
         return null;
     }
 
-    public void checkLoginFailure(){
+    public void checkLoginFailure() {
         Assert.assertNotNull(getInvalidAlert());
         Assert.assertNotNull(getLoginForm());
     }
