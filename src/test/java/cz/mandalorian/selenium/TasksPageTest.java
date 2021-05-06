@@ -36,6 +36,9 @@ public class TasksPageTest {
         this.driver.manage().window().maximize();
     }
 
+    /**
+     * Add task and remove it.
+     */
     @Test
     public void positiveAddTaskWithRemoval() {
         //GIVEN
@@ -74,6 +77,9 @@ public class TasksPageTest {
 
     }
 
+    /**
+     * Add tasks, filter them and remove.
+     */
     @Test
     public void positiveFilterTasksWithRemoval() {
         //GIVEN

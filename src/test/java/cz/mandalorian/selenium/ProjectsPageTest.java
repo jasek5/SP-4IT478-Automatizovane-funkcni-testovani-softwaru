@@ -34,7 +34,7 @@ public class ProjectsPageTest {
     }
 
     /**
-     * Logged user logs off.
+     * Adding project without name fails.
      */
     @Test
     public void negativeAddProjectWithoutName() {
@@ -53,6 +53,9 @@ public class ProjectsPageTest {
         projectsPage.checkProjectCreationFormOpen();
     }
 
+    /**
+     * Adding project - success.
+     */
     @Test
     public void positiveAddProjectWithTodayDate() {
         //GIVEN
