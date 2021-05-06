@@ -30,6 +30,7 @@ public class ProjectsPage extends Page {
 
 
     }
+
     public TasksPage addProject(String name, ProjectPriorityType projectPriorityType, ProjectStatusType projectStatusType, String date) {
         clickAddProjectButton();
         selectPriority(projectPriorityType);
@@ -119,35 +120,36 @@ public class ProjectsPage extends Page {
     }
 
 
-    public void checkProjectAdded(String projectName, ProjectPriorityType projectPriorityType, ProjectStatusType projectStatusType, String date){
+    public void checkProjectAdded(String projectName, ProjectPriorityType projectPriorityType, ProjectStatusType projectStatusType, String date) {
         List<WebElement> projectTable = getProjectTableRows();
         WebElement projectRow = findProjectRowInProjectTable(projectName, projectTable);
 
         Assert.assertNotNull(projectRow);
-        checkProjectRowContent(projectRow, projectPriorityType, projectStatusType,date);
+        checkProjectRowContent(projectRow, projectPriorityType, projectStatusType, date);
 
 
     }
+
     private List<WebElement> getProjectTableRows() {
         WebDriverWait wait = new WebDriverWait(driver, 5);
         wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("table tbody tr")));
-        List<WebElement> projectTable =  driver.findElements(By.cssSelector("table tbody tr"));
+        List<WebElement> projectTable = driver.findElements(By.cssSelector("table tbody tr"));
 
 
         return projectTable;
     }
 
-    private WebElement findProjectRowInProjectTable(String projectName, List<WebElement> projectTable){
-        for (WebElement projectRow: projectTable
-             ) {
-            if (projectRow.getText().contains(projectName)){
+    private WebElement findProjectRowInProjectTable(String projectName, List<WebElement> projectTable) {
+        for (WebElement projectRow : projectTable
+        ) {
+            if (projectRow.getText().contains(projectName)) {
                 return projectRow;
             }
         }
         return null;
     }
 
-    private void checkProjectRowContent(WebElement projectRow, ProjectPriorityType projectPriorityType, ProjectStatusType projectStatusType, String date){
+    private void checkProjectRowContent(WebElement projectRow, ProjectPriorityType projectPriorityType, ProjectStatusType projectStatusType, String date) {
         List<WebElement> columnsList = projectRow.findElements(By.cssSelector("td"));
         String priorityContents = columnsList.get(3).getText();
         String statusContents = columnsList.get(5).getText();
@@ -155,12 +157,12 @@ public class ProjectsPage extends Page {
 
         Assert.assertEquals(priorityContents, projectPriorityType.toString());
         Assert.assertEquals(statusContents, projectStatusType.toString());
-        Assert.assertEquals(dateContents,dateFormatTransform(date));
+        Assert.assertEquals(dateContents, dateFormatTransform(date));
 
 
     }
 
-    private String dateFormatTransform(String date){
+    private String dateFormatTransform(String date) {
         String newDivider = "/";
         String[] dateParts = date.split("-");
         List<String> datePartList = Arrays.asList(dateParts);
@@ -170,7 +172,7 @@ public class ProjectsPage extends Page {
         return month + newDivider + day + newDivider + year;
     }
 
-    public void projectDelete(String projectName){
+    public void projectDelete(String projectName) {
         List<WebElement> projectTable = getProjectTableRows();
         WebElement projectRow = findProjectRowInProjectTable(projectName, projectTable);
         List<WebElement> columnsList = projectRow.findElements(By.cssSelector("td"));
@@ -183,11 +185,13 @@ public class ProjectsPage extends Page {
         confirmProjectDeletion();
 
     }
+
     private void checkProjectDeletionFormOpen() {
         WebDriverWait wait = new WebDriverWait(driver, 5);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Delete']")));
     }
-    private void confirmProjectDeletion(){
+
+    private void confirmProjectDeletion() {
         List<WebElement> checkboxList = driver.findElements(By.cssSelector("#uniform-delete_confirm"));
         if (!checkboxList.isEmpty()) {
             checkboxList.get(0).click();
@@ -196,7 +200,7 @@ public class ProjectsPage extends Page {
 
     }
 
-    public void checkProjectDeleted(String projectName){
+    public void checkProjectDeleted(String projectName) {
         List<WebElement> projectTable = getProjectTableRows();
         WebElement projectRow = findProjectRowInProjectTable(projectName, projectTable);
 

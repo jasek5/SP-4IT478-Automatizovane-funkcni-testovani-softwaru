@@ -14,7 +14,8 @@ import java.io.IOException;
 
 public class ProjectsPageTest {
     private WebDriver driver;
-//    private String username = "rukovoditel";
+
+    //    private String username = "rukovoditel";
 //    private String password = "vse456ru";
 //    private String invalidPassword = "invalid_password";
     @Before
@@ -33,7 +34,7 @@ public class ProjectsPageTest {
     }
 
     /**
-     * Logged user logs off.
+     * Adding project without name fails.
      */
     @Test
     public void negativeAddProjectWithoutName() {
@@ -51,6 +52,10 @@ public class ProjectsPageTest {
         projectsPage.checkNameAlert();
         projectsPage.checkProjectCreationFormOpen();
     }
+
+    /**
+     * Adding project - success.
+     */
     @Test
     public void positiveAddProjectWithTodayDate() {
         //GIVEN
